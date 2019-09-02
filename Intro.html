@@ -20,7 +20,11 @@
 
       main_chart_svg.appendChild(svgNode);
 
-      var svg = d3.select('svg');
+      var svg = d3.select('svg'),
+        c = d3.select('circle');
+
+
+      c.style('fill', 'green'); //only in order to show, that selections work
 
       //this is where my problem happens
       d3.select('svg').call(d3.zoom().on("zoom", function() {
