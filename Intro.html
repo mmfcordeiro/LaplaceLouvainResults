@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script data-require="d3@4.0.0" data-semver="4.0.0" src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+
+<body>
+  <script>
+    var main_chart_svg = document.body;
+
+    d3.xml("https://upload.wikimedia.org/wikipedia/commons/a/a0/Circle_-_black_simple.svg", function(error, documentFragment) {
+      if (error) {
+        console.log(error);
+        return;
+      }
+
+      var svgNode = documentFragment
+        .getElementsByTagName("svg")[0];
+
+      main_chart_svg.appendChild(svgNode);
+
+      var svg = d3.select('svg'),
+        c = d3.select('circle');
+
+
+      c.style('fill', 'green'); //only in order to show, that selections work
+
+      //this is where my problem happens
+      d3.select('svg').call(d3.zoom().on("zoom", function() {
+        c.attr("transform", d3.event.transform)
+      }));
+    });
+  </script>
+</body>
