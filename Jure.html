@@ -8,9 +8,10 @@
   </head>
 
   <body>
-    <h1>Zachary karate club community detection: Classical vs Hierarchical Community Detection</h1>
+    <h1>Leadership Hierarchies for the Jure Leskovec and Andrews Ng temporal collaboration network</h1>
     
     <div class="controls">
+      <button id="swap">Swap Images</button>
       <button id="zoom-in">Zoom in</button>
       <button id="zoom-out">Zoom out</button>
       <button id="reset">Reset</button>
@@ -42,7 +43,7 @@
           return embed
         }
 
-        var lastEmbedSrc = 'svg/Intro.svg'
+        var lastEmbedSrc = 'svg/JureFull.svg'
           , lastEmbed = createNewEmbed(lastEmbedSrc)
           ;
 
@@ -76,6 +77,20 @@
 
           panZoom.resetZoom()
         });
+
+
+        $('#swap').on('click', function(){
+          // Remove last added svg
+          removeEmbed()
+
+          if (lastEmbedSrc == 'svg/JureFull.svg') {
+            lastEmbedSrc = 'svg/JureCommunities.svg'
+          } else {
+            lastEmbedSrc = 'svg/JureFull.svg'
+          }
+
+          lastEmbed = createNewEmbed(lastEmbedSrc)
+        })
       });
     </script>
 
