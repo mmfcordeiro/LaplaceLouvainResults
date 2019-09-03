@@ -62,19 +62,19 @@
         document.getElementById('zoom-in').addEventListener('click', function(ev){
           ev.preventDefault()
 
-          panZoom.zoomIn()
+          svgPanZoom(lastEmbed).zoomIn()
         });
 
         document.getElementById('zoom-out').addEventListener('click', function(ev){
           ev.preventDefault()
 
-          panZoom.zoomOut()
+          svgPanZoom(lastEmbed).zoomOut()
         });
 
         document.getElementById('reset').addEventListener('click', function(ev){
           ev.preventDefault()
 
-          panZoom.resetZoom()
+          svgPanZoom(lastEmbed).resetZoom()
         });
       });
     </script>
