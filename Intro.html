@@ -1,35 +1,74 @@
+
 <!DOCTYPE html>
 <html>
 
-<head>
-  <script data-require="d3@4.0.0" data-semver="4.0.0" src="https://d3js.org/d3.v4.min.js"></script>
-</head>
+  <head>
+    <script src="src/svg-pan-zoom.js"></script>
+    <script src="src/jquery.min.js"></script>
+  </head>
 
-<body>
-  <script>
-    var main_chart_svg = document.body;
+  <body>
+    <h1>Demo for svg-pan-zoom: Dynamic SVG load</h1>
+    <div id="container"></div>
+    <button id="swap" style="padding: 5px 20px; background: red; border: 1px solid #ff0404;">swap</button>
 
-    d3.xml("https://raw.githubusercontent.com/mmfcordeiro/LaplaceLouvainResults/master/svg/Intro.svg", function(error, documentFragment) {
-      if (error) {
-        console.log(error);
-        return;
-      }
+    <script>
+      // Don't use window.onLoad like this in production, because it can only listen to one function.
+      $(function() {
+        var lastEventListener = null;
 
-      var svgNode = documentFragment
-        .getElementsByTagName("svg")[0];
+        function createNewEmbed(src){
+          var embed = document.createElement('embed');
+          embed.setAttribute('style', 'width: 500px; height: 500px; border:1px solid black;');
+          embed.setAttribute('type', 'image/svg+xml');
+          embed.setAttribute('src', src);
 
-      main_chart_svg.appendChild(svgNode);
+          document.getElementById('container').appendChild(embed)
 
-      var svg = d3.select('svg'),
-        c = d3.select('circle');
+          lastEventListener = function(){
+            svgPanZoom(embed, {
+              zoomEnabled: true,
+              controlIconsEnabled: true
+            });
+          }
+          embed.addEventListener('load', lastEventListener)
+
+          return embed
+        }
+
+        var lastEmbedSrc = 'svg/JureFull.svg'
+          , lastEmbed = createNewEmbed(lastEmbedSrc)
+          ;
+
+        function removeEmbed(){
+          // Destroy svgpanzoom
+          svgPanZoom(lastEmbed).destroy()
+          // Remove event listener
+          lastEmbed.removeEventListener('load', lastEventListener)
+          // Null last event listener
+          lastEventListener = null
+          // Remove embed element
+          document.getElementById('container').removeChild(lastEmbed)
+          // Null reference to embed
+          lastEmbed = null
+        }
 
 
-      c.style('fill', 'green'); //only in order to show, that selections work
+        $('#swap').on('click', function(){
+          // Remove last added svg
+          removeEmbed()
 
-      //this is where my problem happens
-      d3.select('svg').call(d3.zoom().on("zoom", function() {
-        c.attr("transform", d3.event.transform)
-      }));
-    });
-  </script>
-</body>
+          if (lastEmbedSrc == 'svg/JureFull.svg') {
+            lastEmbedSrc = 'src/JureCommunities.svg'
+          } else {
+            lastEmbedSrc = 'svg/JureFull.svg'
+          }
+
+          lastEmbed = createNewEmbed(lastEmbedSrc)
+        })
+      });
+    </script>
+
+  </body>
+
+</html>
