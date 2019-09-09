@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <script src="src/svg-pan-zoom.js"></script>
+    <script src="src/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <h1>Jemaah Islamiyah cell that was responsible for the Bali bombings in 2002</h1>
+        
+    
+    <div class="controls">
+      <button id="zoom-in">Zoom in</button>
+      <button id="zoom-out">Zoom out</button>
+      <button id="reset">Reset</button>
+    </div>
+
+    <div>(mouse pan and zoom also available over the image)</div>
+    
+    <div id="container"></div>
+    
+
+    <script>
+      // Don't use window.onLoad like this in production, because it can only listen to one function.
+      $(function() {
+        var lastEventListener = null;
+
+        function createNewEmbed(src){
+          var embed = document.createElement('embed');
+          embed.setAttribute('style', 'width: 100%; height: 100%;');
+          embed.setAttribute('type', 'image/svg+xml');
+          embed.setAttribute('src', src);
+
+          document.getElementById('container').appendChild(embed)
+
+          lastEventListener = function(){
+            svgPanZoom(embed, {
+              zoomEnabled: true,
+              controlIconsEnabled: false
+            });
+          }
+          embed.addEventListener('load', lastEventListener)
+
+          return embed
+        }
+
+        var lastEmbedSrc = 'svg/JemaahIslamiyah.svg'
+          , lastEmbed = createNewEmbed(lastEmbedSrc)
+          ;
+
+        function removeEmbed(){
+          // Destroy svgpanzoom
+          svgPanZoom(lastEmbed).destroy()
+          // Remove event listener
+          lastEmbed.removeEventListener('load', lastEventListener)
+          // Null last event listener
+          lastEventListener = null
+          // Remove embed element
+          document.getElementById('container').removeChild(lastEmbed)
+          // Null reference to embed
+          lastEmbed = null
+        }
+
+        document.getElementById('zoom-in').addEventListener('click', function(ev){
+          ev.preventDefault()
+
+          svgPanZoom(lastEmbed).zoomIn()
+        });
+
+        document.getElementById('zoom-out').addEventListener('click', function(ev){
+          ev.preventDefault()
+
+          svgPanZoom(lastEmbed).zoomOut()
+        });
+
+        document.getElementById('reset').addEventListener('click', function(ev){
+          ev.preventDefault()
+
+          svgPanZoom(lastEmbed).resetZoom()
+        });
+      });
+    </script>
+
+  </body>
+
+</html>
